@@ -16,8 +16,8 @@ li  r2,  2          # r2 = 2
 li  r10, 0          # r10 = 0 
 rem r3,  r1, r2     # r3 = r1 % r2
 eq  r3,  r10        # r3 == 0
-jmp even            # if true, is even
-bra odd             # else, is odd
+bra even            # if true, is even
+jmp odd             # else, is odd
 
 even:
     print "Number is even"  # Prints the string
