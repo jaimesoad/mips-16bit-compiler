@@ -85,3 +85,36 @@ func IsRegister(val string) bool {
 
 	return ok
 }
+
+func GetSequence(instruction string, char rune, reg1, reg2 string, i int) []string {
+	switch instruction {
+	case "li":
+		if i != 0 {
+			return []string{reg2, "0x1"}
+		}
+
+		return []string{reg2, fmt.Sprintf("%02x", char)}
+
+	case "sb":
+		return []string{reg1, reg2}
+
+	case "sub":
+		return []string{reg1, reg1, reg2}
+	}
+
+	return []string{}
+}
+
+func GetValues(value string) []string {
+	var out []string
+
+	arrStr := strings.Split(strings.Replace(value, ",", "", -1), " ")
+
+	for _, val := range arrStr {
+		if val != "" {
+			out = append(out, val)
+		}
+	}
+
+	return out
+}
