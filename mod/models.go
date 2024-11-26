@@ -17,10 +17,10 @@ type Jmp struct {
 
 type Mips struct {
 	Jumps       map[string]Jmp
-	OutputFile  []string
 	LineNum     uint16
 	Whitespaces uint16
 	Code        string
+	OutputFile  []string
 }
 
 func New() Mips {
@@ -51,7 +51,7 @@ func (m *Mips) EvalInstruction(instruction string, output *uint16, lineArr []str
 
 		*output |= reg<<8 | num
 
-		//fmt.Println("val:", val, "| num:", num, "| numUint16", numUint16, "| 1-i:", 8*(1 - i))
+		// fmt.Println("val:", val, "| num:", num, "| numUint16", numUint16, "| 1-i:", 8*(1 - i))
 
 	case "slt", "eq", "sb", "sgt", "neq", "mov":
 		if len(lineArr) != 2 {
@@ -150,9 +150,7 @@ func (m *Mips) EvalInstruction(instruction string, output *uint16, lineArr []str
 		if ok {
 			if !slices.Contains(jump.Callers, len(m.OutputFile)) {
 				jump.Callers = append(jump.Callers, len(m.OutputFile))
-
 			}
-
 		} else {
 			jump = Jmp{Callers: []int{len(m.OutputFile)}}
 		}
@@ -249,11 +247,11 @@ func (m *Mips) LoadString() error {
 	instructions := []string{"li", "sb", "li", "sub"}
 
 	reversed := strings.Replace(utils.ReverseString(content), "\"", "", -1)
-	outer:
+outer:
 	for _, char := range reversed {
 
 		for i, val := range instructions {
-			
+
 			if val == "sub" && char == rune(reversed[len(reversed)-1]) {
 				m.Whitespaces += 2
 				break outer

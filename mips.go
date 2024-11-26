@@ -12,7 +12,6 @@ import (
 )
 
 func main() {
-
 	if len(os.Args) != 2 {
 		fmt.Printf("error: expected 1 argument but got %d\n", len(os.Args)-1)
 		return
@@ -41,7 +40,7 @@ func main() {
 	generated := mod.New()
 
 	for scanner.Scan() {
-		generated.Code = strings.Split(scanner.Text(), "#")[0]
+		generated.Code = utils.RemoveComments(scanner.Text())
 		line := strings.ToLower(strings.TrimSpace(generated.Code))
 		lineArr := utils.GetValues(line)
 
@@ -107,16 +106,15 @@ func main() {
 			return
 		}
 
-		if !(instruction == "lstr" || instruction == "print") {
+		if instruction != "lstr" && instruction != "print" {
 			generated.OutputFile = append(generated.OutputFile, fmt.Sprintf("%04x\n", output))
-
 		}
 
 		generated.LineNum++
 		generated.Whitespaces++
 	}
 
-	//var jumps map[string]uint16
+	// var jumps map[string]uint16
 
 	for key, value := range generated.Jumps {
 
@@ -142,7 +140,6 @@ func main() {
 
 			if len(jp) <= 3 {
 				newVal += "0" + jp
-
 			} else {
 				newVal += jp
 			}

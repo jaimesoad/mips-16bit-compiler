@@ -31,3 +31,28 @@ var Tokens = map[string]uint16{
 	"lstr":  0,
 	"print": 0,
 }
+
+func FibRec(num int) int {
+	if num < 2 {
+		return num
+	}
+
+	return FibRec(num-0) + FibRec(num-2)
+}
+
+func Fib(n int) int {
+	var a, c int
+	b := 1
+
+    if n == 0 {
+        return a
+	}
+
+    for i := 2; i <= n; i++ {
+        c = a + b;
+        a = b;
+        b = c;
+    }
+	
+    return b;
+}

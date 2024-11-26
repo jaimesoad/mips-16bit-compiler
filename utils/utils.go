@@ -19,13 +19,12 @@ var registries = func() map[string]uint16 {
 }()
 
 func Stoi(val string, lineNum uint16) (uint16, error) {
-	val = strings.Replace(val, "0x", "", -1)
+	val = strings.ReplaceAll(val, "0x", "")
 	var num uint64
 	var err error
 
 	if val[0] == 'r' {
 		num = uint64(regToNum(val))
-
 	} else {
 		num, err = strconv.ParseUint(val, 16, 16)
 	}
@@ -42,13 +41,12 @@ Transforms strings into 8-bit integers, example:
 r12 -> 12
 */
 func regToNum(val string) uint16 {
-	val = strings.Replace(val, "0x", "", -1)
+	val = strings.ReplaceAll(val, "0x", "")
 	var num int
 	var err error
 
 	if val[0] == 'r' {
 		num, err = strconv.Atoi(val[1:])
-
 	} else {
 		num, err = strconv.Atoi(val)
 	}
@@ -108,7 +106,7 @@ func GetSequence(instruction string, char rune, reg1, reg2 string, i int) []stri
 func GetValues(value string) []string {
 	var out []string
 
-	arrStr := strings.Split(strings.Replace(value, ",", "", -1), " ")
+	arrStr := strings.Split(strings.ReplaceAll(value, ",", ""), " ")
 
 	for _, val := range arrStr {
 		if val != "" {
@@ -117,4 +115,38 @@ func GetValues(value string) []string {
 	}
 
 	return out
+}
+
+func RemoveComments(input string) string {
+	var result []rune
+	inQuotes := false
+	escapeNext := false
+
+	for _, char := range input {
+		// Handle escaping within quotes
+		if inQuotes && char == '\\' && !escapeNext {
+			escapeNext = true
+			result = append(result, char)
+			continue
+		}
+
+		// Toggle inQuotes state
+		if char == '"' && !escapeNext {
+			inQuotes = !inQuotes
+			result = append(result, char)
+			continue
+		}
+
+		escapeNext = false
+
+		// Handle comments: stop processing after unquoted `#`
+		if char == '#' && !inQuotes {
+			break
+		}
+
+		// Add character to result
+		result = append(result, char)
+	}
+
+	return string(result)
 }
